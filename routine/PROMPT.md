@@ -56,8 +56,12 @@ and stop.
    (`photos[]`) and the floor plan URLs (`floorplans[]`). If it fails, set `status` to `"error"`,
    POST the result and stop.
 3. Call `get_property_comparables` with `propertyId`, `include: ["sold"]`,
-   `radiusMeters: 1609` and `soldSince: "now-24M"`. Pass every row back; do not filter them.
-   If it fails, set `comparables` to `null`, add an entry to `errors[]` and carry on.
+   `radiusMeters: 805` (0.5 miles), `soldSince: "now-12M"`, `limitPerSection: 25`, and
+   `propertyTypes: [<the subject's addressType>]` when `addressType` is one of `DETACHED`,
+   `SEMI_DETACHED`, `TERRACED`, `FLAT` or `BUNGALOW` (omit `propertyTypes` otherwise).
+   Then keep only rows whose `tenure` is `FREEHOLD`: the tool cannot filter on tenure itself.
+   Pass every remaining row back. If none remain, `comparables` is an empty list. If the call
+   fails, set `comparables` to `null`, add an entry to `errors[]` and carry on.
 
 ## Mapping
 
@@ -97,7 +101,8 @@ From `get_property_comparables` (`sold.results[]`), one row each:
 `price` ÷ `floor_area_sqft` rounded to 1 decimal place, `distance_miles` = `distanceMeters` ÷ 1609.34
 rounded to 2 decimal places, `condition_score` = `conditionScore`,
 `propertyengine_url` = `propertyEngineUrl`, `source` = `"Land Registry"`.
-Set `comparables_parameters_used` to the `search` object the tool returns.
+Set `comparables_parameters_used` to the `search` object the tool returns, plus
+`"tenure": "FREEHOLD"` and `"propertyTypes"` as sent.
 
 ## Output
 
