@@ -36,7 +36,9 @@ Make scenario B ◀── POST JSON ── (photo URLs, details, comparables)
 
 ## 2. Make scenario B: receive the bundle (build this first)
 
-1. **Webhooks → Custom webhook**. Copy its URL into the routine's `MAKE_WEBHOOK_URL`.
+1. **Webhooks → Custom webhook**. Copy its URL into the routine's `MAKE_WEBHOOK_URL`. To teach Make
+   the fields, click "Redetermine data structure" and POST `routine/sample_bundle.json` to it
+   (e.g. `curl -X POST <webhook url> -H "Content-Type: application/json" --data-binary @routine/sample_bundle.json`).
    Turn on "Get request headers".
 2. **Filter**: header `x-auc-secret` equals `MAKE_WEBHOOK_SECRET`. Drop anything else.
 3. **Router** on `status`:
@@ -52,8 +54,10 @@ Make scenario B ◀── POST JSON ── (photo URLs, details, comparables)
 8. **GHL → Update opportunity** (`opportunity_id`) custom field "Google Drive link".
 9. **Slack** message with the folder link, plus `errors[]` if `status` is `partial`.
 
-Download the photos as soon as the webhook arrives: discovery will tell us whether the URLs
-expire.
+Photos and floor plans are hosted on `media.propertyengine.co.uk`. Photo URLs have no file
+extension, so name them `.jpg` as above; floor plans are usually `.png` (keep the extension from
+the URL). Each photo also has a `room` label (EXTERIOR, KITCHEN, BATHROOM, LIVING or UNKNOWN) if you
+want it in the file name. Download them as soon as the webhook arrives.
 
 ## 3. Make scenario A: start the routine
 
@@ -68,7 +72,7 @@ expire.
      - `Content-Type: application/json`
    - Body type Raw, JSON:
      ```json
-     { "text": "opportunity_id={{opp.id}}; portal_url={{opp.rightmove_link}}; address={{opp.address}}; postcode={{opp.postcode}}" }
+     { "text": "opportunity_id={{opp.id}}; propertyengine_url={{opp.propertyengine_link}}; portal_url={{opp.rightmove_link}}; address={{opp.address}}; postcode={{opp.postcode}}" }
      ```
    - Parse response: yes. The reply is `{ "type": "routine_fire", "claude_code_session_id": ..., "claude_code_session_url": ... }`,
      not the property data. That arrives in scenario B a few minutes later.

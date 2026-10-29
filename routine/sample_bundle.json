@@ -1,0 +1,211 @@
+{
+  "status": "ok",
+  "opportunity_id": "ghl-opp-id-example",
+  "property_id": "VsBsijE3n",
+  "match_confidence": 1.0,
+  "details": {
+    "address_line": "15, Filbert Close",
+    "town": "Gloucester",
+    "postcode": "GL4 5EX",
+    "property_type": "TERRACED",
+    "tenure": "FREEHOLD",
+    "bedrooms": 3,
+    "bathrooms": 1,
+    "receptions": null,
+    "floor_area_sqft": 732,
+    "floor_area_sqm": 68,
+    "asking_price_gbp": 260000,
+    "asking_price_qualifier": "Offers Over",
+    "listing_status": "For sale",
+    "listed_date": "2026-10-25",
+    "agent_name": "Murdock & Wasley Estate Agents, Gloucestershire",
+    "agent_phone": "01452 227879",
+    "epc_rating": "C",
+    "epc_potential": "B",
+    "council_tax_band": "B",
+    "condition_score": 3,
+    "last_sold_price_gbp": 180500,
+    "last_sold_date": "2017-01-31",
+    "area_average_sold_price_gbp": 235900,
+    "listing_url": "https://propertyengine.co.uk/property/VsBsijE3n",
+    "rightmove_url": "https://www.rightmove.co.uk/properties/94708329",
+    "zoopla_url": "https://www.zoopla.co.uk/for-sale/details/74598072/",
+    "description": "Well Presented Three Bedroom Terraced House Situated In A Popular Location\n\nMurdock & Wasley Estate Agents are pleased to introduce this three bedroom mid-terrace home to the market. (shortened in this sample)"
+  },
+  "photos": [
+    {
+      "index": 1,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/0/small/sBCUtYL8",
+      "room": "EXTERIOR"
+    },
+    {
+      "index": 2,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/1/small/ikpLnDEt",
+      "room": "EXTERIOR"
+    },
+    {
+      "index": 3,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/2/small/tvmEWZdN",
+      "room": "KITCHEN"
+    },
+    {
+      "index": 4,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/3/small/WzXU-Uyh",
+      "room": "LIVING"
+    },
+    {
+      "index": 5,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/4/small/yYHgoBp6",
+      "room": "LIVING"
+    },
+    {
+      "index": 6,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/5/small/cItUR5Fc",
+      "room": "LIVING"
+    },
+    {
+      "index": 7,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/6/small/HD8CNYW9",
+      "room": "UNKNOWN"
+    },
+    {
+      "index": 8,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/7/small/ov6nUHXR",
+      "room": "BATHROOM"
+    },
+    {
+      "index": 9,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/8/small/8udWevB-",
+      "room": "EXTERIOR"
+    },
+    {
+      "index": 10,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/9/small/zMASX1R6",
+      "room": "EXTERIOR"
+    },
+    {
+      "index": 11,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/10/small/Esv5dp7R",
+      "room": "UNKNOWN"
+    },
+    {
+      "index": 12,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/11/small/Qkek69U9",
+      "room": "UNKNOWN"
+    },
+    {
+      "index": 13,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/12/small/B8fNevi4",
+      "room": "UNKNOWN"
+    },
+    {
+      "index": 14,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/13/small/A9tyxGHA",
+      "room": "UNKNOWN"
+    },
+    {
+      "index": 15,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/14/small/8ywnNvQ_",
+      "room": "UNKNOWN"
+    },
+    {
+      "index": 16,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/15/small/ZUTwD4Qb",
+      "room": "UNKNOWN"
+    },
+    {
+      "index": 17,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/16/small/nGgjvXuF",
+      "room": "UNKNOWN"
+    },
+    {
+      "index": 18,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/17/small/PevS5hQ_",
+      "room": "UNKNOWN"
+    },
+    {
+      "index": 19,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/18/small/il2wEHFa",
+      "room": "UNKNOWN"
+    },
+    {
+      "index": 20,
+      "url": "https://media.propertyengine.co.uk/photo/VsBsijE3n/19/small/XGsnBL-R",
+      "room": "UNKNOWN"
+    }
+  ],
+  "floorplan_url": "https://media.propertyengine.co.uk/b846f0d99de06b6e99a09fe791d67cc93f8d71da.png",
+  "floorplan_urls": [
+    "https://media.propertyengine.co.uk/b846f0d99de06b6e99a09fe791d67cc93f8d71da.png"
+  ],
+  "comparables": [
+    {
+      "address": "12, Filbert Close, Gloucester, GL4 5EX",
+      "postcode": "GL4 5EX",
+      "sold_price_gbp": 247500,
+      "sold_date": "2026-02-13",
+      "property_type": "TERRACED",
+      "tenure": "FREEHOLD",
+      "bedrooms": 3,
+      "floor_area_sqft": 936,
+      "price_per_sqft_gbp": 264.4,
+      "distance_miles": 0.01,
+      "condition_score": 4,
+      "propertyengine_url": "https://propertyengine.co.uk/property/EC_nS2CNb",
+      "source": "Land Registry"
+    },
+    {
+      "address": "10, Filbert Close, Gloucester, GL4 5EX",
+      "postcode": "GL4 5EX",
+      "sold_price_gbp": 232000,
+      "sold_date": "2025-04-15",
+      "property_type": "TERRACED",
+      "tenure": "FREEHOLD",
+      "bedrooms": 3,
+      "floor_area_sqft": 883,
+      "price_per_sqft_gbp": 262.7,
+      "distance_miles": 0.01,
+      "condition_score": null,
+      "propertyengine_url": "https://propertyengine.co.uk/property/93JnuKq7Yo",
+      "source": "Land Registry"
+    },
+    {
+      "address": "3, Nutmeg Close, Gloucester, GL4 5XZ",
+      "postcode": "GL4 5XZ",
+      "sold_price_gbp": 242000,
+      "sold_date": "2026-07-14",
+      "property_type": "TERRACED",
+      "tenure": "FREEHOLD",
+      "bedrooms": 3,
+      "floor_area_sqft": 678,
+      "price_per_sqft_gbp": 356.9,
+      "distance_miles": 0.02,
+      "condition_score": 3,
+      "propertyengine_url": "https://propertyengine.co.uk/property/usV3jQ7ho",
+      "source": "Land Registry"
+    },
+    {
+      "address": "16, Mandara Grove, Gloucester, GL4 5XT",
+      "postcode": "GL4 5XT",
+      "sold_price_gbp": 285000,
+      "sold_date": "2026-02-02",
+      "property_type": "SEMI_DETACHED",
+      "tenure": "FREEHOLD",
+      "bedrooms": null,
+      "floor_area_sqft": null,
+      "price_per_sqft_gbp": null,
+      "distance_miles": 0.04,
+      "condition_score": null,
+      "propertyengine_url": null,
+      "source": "Land Registry"
+    }
+  ],
+  "comparables_parameters_used": {
+    "radiusMeters": 1609,
+    "sortedBy": "nearest first",
+    "soldSince": "now-24M"
+  },
+  "errors": [],
+  "generated_at": "2026-10-29T10:00:00Z",
+  "claude_session_url": null
+}
