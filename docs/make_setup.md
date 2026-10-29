@@ -110,4 +110,5 @@ right after the AUC-104 call, only when a new deal folder is created.
 2. Google Sheets (Julian's connection) writes, on tab `" Numbers Overview All Options "` (the tab
    name has a leading and trailing space): C10 = `guide_price`, C44 = `new_market_value`,
    F69 = `beds_potential`, F72 = `lha_weekly`. Each cell is skipped when GHL sends no value.
-3. Scenario 3 (copy "Sample Schedules") is still to add.
+3. In parallel with steps 1–2, Google Drive copies "Sample Schedules"
+   (`1gUafgwbDwn174LwVqeP-JqrXLfbvS4ICt9uNmgAlmpQ`) into the deal folder as `SoW - <opportunity name>`.
