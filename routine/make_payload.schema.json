@@ -15,7 +15,8 @@
     "comparables_parameters_used",
     "errors",
     "generated_at",
-    "claude_session_url"
+    "claude_session_url",
+    "drive_folders"
   ],
   "additionalProperties": false,
   "properties": {
@@ -433,6 +434,42 @@
         "string",
         "null"
       ]
+    },
+    "drive_folders": {
+      "type": "object",
+      "required": [
+        "deal_folder_id",
+        "photos_folder_id",
+        "floorplan_folder_id",
+        "comparables_folder_id"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "deal_folder_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "photos_folder_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "floorplan_folder_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "comparables_folder_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
     }
   }
 }

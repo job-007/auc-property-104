@@ -1,0 +1,376 @@
+{
+  "name": "Deal Staker - AUC-104 - Part 2",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": {
+        "hook": 4001786,
+        "maxResults": 1
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0,
+          "name": "Bundle from Claude routine"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "builtin:BasicRouter",
+      "version": 1,
+      "mapper": null,
+      "metadata": {
+        "designer": {
+          "x": 300,
+          "y": 0
+        }
+      },
+      "routes": [
+        {
+          "flow": [
+            {
+              "id": 3,
+              "module": "builtin:BasicFeeder",
+              "version": 1,
+              "parameters": {},
+              "mapper": {
+                "array": "{{1.photos}}"
+              },
+              "metadata": {
+                "designer": {
+                  "x": 600,
+                  "y": -300,
+                  "name": "Each photo"
+                }
+              },
+              "filter": {
+                "name": "Has photos",
+                "conditions": [
+                  [
+                    {
+                      "a": "{{1.status}}",
+                      "o": "text:equal",
+                      "b": "ok"
+                    },
+                    {
+                      "a": "{{length(1.photos)}}",
+                      "o": "number:greater",
+                      "b": "0"
+                    }
+                  ],
+                  [
+                    {
+                      "a": "{{1.status}}",
+                      "o": "text:equal",
+                      "b": "partial"
+                    },
+                    {
+                      "a": "{{length(1.photos)}}",
+                      "o": "number:greater",
+                      "b": "0"
+                    }
+                  ]
+                ]
+              }
+            },
+            {
+              "id": 4,
+              "module": "http:DownloadFile",
+              "version": 4,
+              "parameters": {
+                "authenticationType": "noAuth"
+              },
+              "mapper": {
+                "url": "{{3.url}}",
+                "stopOnHttpError": true,
+                "shareCookies": false
+              },
+              "metadata": {
+                "designer": {
+                  "x": 900,
+                  "y": -300,
+                  "name": "Download photo"
+                }
+              }
+            },
+            {
+              "id": 5,
+              "module": "google-drive:uploadAFile",
+              "version": 4,
+              "parameters": {
+                "__IMTCONN__": 9717022
+              },
+              "mapper": {
+                "select": "map",
+                "folderId": "{{1.drive_folders.photos_folder_id}}",
+                "filename": "{{if(3.index < 10; \"0\" + 3.index; 3.index)}}-{{lower(3.room)}}.jpg",
+                "data": "{{4.data}}",
+                "convert": false
+              },
+              "metadata": {
+                "designer": {
+                  "x": 1200,
+                  "y": -300,
+                  "name": "Upload to Photos"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "flow": [
+            {
+              "id": 6,
+              "module": "builtin:BasicFeeder",
+              "version": 1,
+              "parameters": {},
+              "mapper": {
+                "array": "{{1.floorplan_urls}}"
+              },
+              "metadata": {
+                "designer": {
+                  "x": 600,
+                  "y": -100,
+                  "name": "Each floor plan"
+                }
+              },
+              "filter": {
+                "name": "Has floor plans",
+                "conditions": [
+                  [
+                    {
+                      "a": "{{1.status}}",
+                      "o": "text:equal",
+                      "b": "ok"
+                    },
+                    {
+                      "a": "{{length(1.floorplan_urls)}}",
+                      "o": "number:greater",
+                      "b": "0"
+                    }
+                  ],
+                  [
+                    {
+                      "a": "{{1.status}}",
+                      "o": "text:equal",
+                      "b": "partial"
+                    },
+                    {
+                      "a": "{{length(1.floorplan_urls)}}",
+                      "o": "number:greater",
+                      "b": "0"
+                    }
+                  ]
+                ]
+              }
+            },
+            {
+              "id": 7,
+              "module": "http:DownloadFile",
+              "version": 4,
+              "parameters": {
+                "authenticationType": "noAuth"
+              },
+              "mapper": {
+                "url": "{{6.value}}",
+                "stopOnHttpError": true,
+                "shareCookies": false
+              },
+              "metadata": {
+                "designer": {
+                  "x": 900,
+                  "y": -100,
+                  "name": "Download floor plan"
+                }
+              }
+            },
+            {
+              "id": 8,
+              "module": "google-drive:uploadAFile",
+              "version": 4,
+              "parameters": {
+                "__IMTCONN__": 9717022
+              },
+              "mapper": {
+                "select": "map",
+                "folderId": "{{1.drive_folders.floorplan_folder_id}}",
+                "filename": "floorplan-{{6.`__IMTINDEX__`}}.{{last(split(6.value; \".\"))}}",
+                "data": "{{7.data}}",
+                "convert": false
+              },
+              "metadata": {
+                "designer": {
+                  "x": 1200,
+                  "y": -100,
+                  "name": "Upload to Floorplan"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "flow": [
+            {
+              "id": 9,
+              "module": "builtin:BasicFeeder",
+              "version": 1,
+              "parameters": {},
+              "mapper": {
+                "array": "{{1.comparables}}"
+              },
+              "metadata": {
+                "designer": {
+                  "x": 600,
+                  "y": 100,
+                  "name": "Each comparable"
+                }
+              },
+              "filter": {
+                "name": "Has comparables",
+                "conditions": [
+                  [
+                    {
+                      "a": "{{1.status}}",
+                      "o": "text:equal",
+                      "b": "ok"
+                    },
+                    {
+                      "a": "{{length(1.comparables)}}",
+                      "o": "number:greater",
+                      "b": "0"
+                    }
+                  ],
+                  [
+                    {
+                      "a": "{{1.status}}",
+                      "o": "text:equal",
+                      "b": "partial"
+                    },
+                    {
+                      "a": "{{length(1.comparables)}}",
+                      "o": "number:greater",
+                      "b": "0"
+                    }
+                  ]
+                ]
+              }
+            },
+            {
+              "id": 10,
+              "module": "util:TextAggregator",
+              "version": 1,
+              "parameters": {
+                "feeder": 9,
+                "rowSeparator": "\n"
+              },
+              "mapper": {
+                "value": "\"{{9.sold_date}}\",\"{{replace(9.address; \"\\\"\"; \"'\")}}\",{{9.sold_price_gbp}},{{9.bedrooms}},\"{{9.property_type}}\",\"{{9.tenure}}\",{{9.floor_area_sqft}},{{9.price_per_sqft_gbp}},{{9.distance_miles}},{{9.condition_score}},\"{{9.propertyengine_url}}\""
+              },
+              "metadata": {
+                "designer": {
+                  "x": 900,
+                  "y": 100,
+                  "name": "CSV rows"
+                }
+              }
+            },
+            {
+              "id": 11,
+              "module": "google-drive:uploadAFile",
+              "version": 4,
+              "parameters": {
+                "__IMTCONN__": 9717022
+              },
+              "mapper": {
+                "select": "map",
+                "folderId": "{{1.drive_folders.comparables_folder_id}}",
+                "filename": "comparables.csv",
+                "data": "sold_date,address,sold_price_gbp,bedrooms,property_type,tenure,floor_area_sqft,price_per_sqft_gbp,distance_miles,condition_score,propertyengine_url\n{{10.text}}",
+                "convert": false
+              },
+              "metadata": {
+                "designer": {
+                  "x": 1200,
+                  "y": 100,
+                  "name": "Upload comparables.csv"
+                }
+              }
+            }
+          ]
+        },
+        {
+          "flow": [
+            {
+              "id": 12,
+              "module": "google-drive:uploadAFile",
+              "version": 4,
+              "parameters": {
+                "__IMTCONN__": 9717022
+              },
+              "mapper": {
+                "select": "map",
+                "folderId": "{{1.drive_folders.deal_folder_id}}",
+                "filename": "PropertyEngine summary.txt",
+                "data": "PropertyEngine summary\nAddress: {{1.details.address_line}}, {{1.details.town}}, {{1.details.postcode}}\nAsking price: \u00a3{{1.details.asking_price_gbp}} ({{1.details.asking_price_qualifier}})\nType: {{1.details.property_type}} | Tenure: {{1.details.tenure}}\nBedrooms: {{1.details.bedrooms}} | Bathrooms: {{1.details.bathrooms}}\nFloor area: {{1.details.floor_area_sqm}} sqm ({{1.details.floor_area_sqft}} sqft)\nEPC: {{1.details.epc_rating}} (potential {{1.details.epc_potential}}) | Council tax: {{1.details.council_tax_band}}\nCondition score (1-5): {{1.details.condition_score}}\nLast sold: \u00a3{{1.details.last_sold_price_gbp}} on {{1.details.last_sold_date}}\nArea average sold price: \u00a3{{1.details.area_average_sold_price_gbp}}\nListed: {{1.details.listed_date}} | Status: {{1.details.listing_status}}\nAgent: {{1.details.agent_name}} {{1.details.agent_phone}}\nPropertyEngine: {{1.details.listing_url}}\nRightmove: {{1.details.rightmove_url}}\nZoopla: {{1.details.zoopla_url}}\nPhotos: {{length(1.photos)}} | Floor plans: {{length(1.floorplan_urls)}} | Comparables: {{length(1.comparables)}}\nGenerated: {{1.generated_at}} | Claude run: {{1.claude_session_url}}\n\nDescription:\n{{1.details.description}}\n",
+                "convert": false
+              },
+              "metadata": {
+                "designer": {
+                  "x": 600,
+                  "y": 300,
+                  "name": "Upload summary.txt"
+                }
+              },
+              "filter": {
+                "name": "Has details",
+                "conditions": [
+                  [
+                    {
+                      "a": "{{1.status}}",
+                      "o": "text:equal",
+                      "b": "ok"
+                    },
+                    {
+                      "a": "{{1.details.address_line}}",
+                      "o": "exist"
+                    }
+                  ],
+                  [
+                    {
+                      "a": "{{1.status}}",
+                      "o": "text:equal",
+                      "b": "partial"
+                    },
+                    {
+                      "a": "{{1.details.address_line}}",
+                      "o": "exist"
+                    }
+                  ]
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "instant": true,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": false,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": false,
+      "freshVariables": false
+    }
+  }
+}

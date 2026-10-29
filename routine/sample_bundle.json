@@ -207,5 +207,11 @@
   },
   "errors": [],
   "generated_at": "2026-10-29T10:00:00Z",
-  "claude_session_url": null
+  "claude_session_url": null,
+  "drive_folders": {
+    "deal_folder_id": "REPLACE_WITH_TEST_DEAL_FOLDER_ID",
+    "photos_folder_id": "REPLACE_WITH_TEST_PHOTOS_FOLDER_ID",
+    "floorplan_folder_id": "REPLACE_WITH_TEST_FLOORPLAN_FOLDER_ID",
+    "comparables_folder_id": "REPLACE_WITH_TEST_COMPARABLES_FOLDER_ID"
+  }
 }

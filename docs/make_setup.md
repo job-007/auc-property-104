@@ -1,87 +1,89 @@
-# Make.com ↔ Claude routine setup
+# Deal Staker: Make ↔ Claude routine setup
 
-How the deal folder automation fits together. The routine prompt is in `routine/PROMPT.md` and the
-JSON Make receives is defined in `routine/make_payload.schema.json`.
+Make folder "Deal Staker" (team 2348752, zone eu1). The routine prompt is `routine/PROMPT.md`; the JSON
+the routine sends to Part 2 is defined in `routine/make_payload.schema.json` (example:
+`routine/sample_bundle.json`).
 
 ```
 GHL card → UNDER ANALYSIS
-   │
+   │  webhook ghl-deal-stacker-under-analysis (x-make-apikey)
    ▼
-Make scenario A ── POST /fire ──▶ Claude routine ── PropertyEngine connector
-                                       │
-                                       ▼
-Make scenario B ◀── POST JSON ── (photo URLs, details, comparables)
-   │
-   ├─ download each photo URL → Google Drive /Photos
-   ├─ floor plan URL → Google Drive /Floor Plan
-   ├─ comparables → CSV → Google Drive /Comparables
-   └─ update GHL "Google Drive link" + Slack message
+Deal Staker - AUC-102 (8165648)
+   search Drive → no folder yet → create deal folder + Photos/Videos/Floorplan/Comparables
+   → GHL: write Drive link → HTTP POST to Part 1 (opportunity + folder IDs)
+   │  webhook deal-staker-auc-104-part-1 (x-make-apikey)
+   ▼
+Deal Staker - AUC-104 - Part 1 (8255125)
+   → HTTP POST to the Claude routine Fire URL (returns at once with a session link)
+   ▼
+Claude routine "AUC deal bundle" ── PropertyEngine connector (get_property, get_property_comparables)
+   │  POST JSON with x-make-apikey
+   ▼  webhook deal-staker-auc-104-part-2
+Deal Staker - AUC-104 - Part 2 (8255121)
+   router:
+   ├─ each photo URL → Download a file → Drive: Photos/01-exterior.jpg …
+   ├─ each floor plan URL → Download a file → Drive: Floorplan/floorplan-1.png
+   ├─ each comparable → CSV rows → Drive: Comparables/comparables.csv
+   └─ details → Drive: deal folder/PropertyEngine summary.txt
 ```
 
-## 1. Claude side (one-off)
+| Scenario | ID | Webhook | Webhook URL |
+|---|---|---|---|
+| Deal Staker - AUC-102 | 8165648 | ghl-deal-stacker-under-analysis (3972455) | `https://hook.eu1.make.com/t6w6i964milync86m0zcrgp4lsju90fj` |
+| Deal Staker - AUC-104 - Part 1 | 8255125 | deal-staker-auc-104-part-1 (4001785) | `https://hook.eu1.make.com/detj1a328lm2ahwpu1dg8ps57cjiyvvq` |
+| Deal Staker - AUC-104 - Part 2 | 8255121 | deal-staker-auc-104-part-2 (4001786) | `https://hook.eu1.make.com/4goqouy6g32cvpusniiziwyn3rvvnjj3` |
 
-1. Add the PropertyEngine connector at https://claude.ai/customize/connectors
-   (URL `https://propertyengine.co.uk/mcp`, "Sign in now", "Use Claude's published identity"),
-   and sign in with the team email and the 6-digit code.
-2. Create the routine at https://claude.ai/code/routines:
-   - **Prompt**: the text from `routine/PROMPT.md`.
-   - **Repository**: none needed (the prompt is self-contained).
-   - **Connectors**: PropertyEngine only. Remove the rest.
-   - **Environment**: one whose network access allows your Make webhook host
-     (for example `hook.eu1.make.com`; check the region in your webhook URL).
-   - **Environment variables**: `MAKE_WEBHOOK_URL` (from scenario B) and `MAKE_WEBHOOK_SECRET`
-     (a long random string you also put in scenario B's filter).
-   - **Trigger**: API. Copy the **Fire URL**, click **Generate token** and copy the token
-     straight into Make. It is shown once.
+All three webhooks require the header `x-make-apikey` with the value of the Make key
+"ghl-webhook-key" (the one GHL already sends).
 
-## 2. Make scenario B: receive the bundle (build this first)
+## One-off setup
 
-1. **Webhooks → Custom webhook**. Copy its URL into the routine's `MAKE_WEBHOOK_URL`. To teach Make
-   the fields, click "Redetermine data structure" and POST `routine/sample_bundle.json` to it
-   (e.g. `curl -X POST <webhook url> -H "Content-Type: application/json" --data-binary @routine/sample_bundle.json`).
-   Turn on "Get request headers".
-2. **Filter**: header `x-auc-secret` equals `MAKE_WEBHOOK_SECRET`. Drop anything else.
-3. **Router** on `status`:
-   - `not_found` / `error` → Slack message with `errors[]` and `claude_session_url`. Stop.
-   - `ok` / `partial` → continue.
-4. **Google Drive → Create a folder** named from `details.address_line` and `details.postcode`,
-   then the subfolders Photos, Floor Plan and Comparables.
-5. **Iterator** on `photos[]` → **HTTP → Get a file** (`url`) → **Google Drive → Upload a file**
-   into Photos, file name `{{if(index < 10; "0" + index; index)}}.jpg`.
-6. If `floorplan_urls[]` is not empty: Iterator → Get a file → Upload into Floor Plan.
-7. **Array aggregator** on `comparables[]` → **CSV → Create CSV** → Upload `comparables.csv`
-   into Comparables.
-8. **GHL → Update opportunity** (`opportunity_id`) custom field "Google Drive link".
-9. **Slack** message with the folder link, plus `errors[]` if `status` is `partial`.
+### 1. Make: two API key connections (Make → Connections → Add, type "API Key")
 
-Photos and floor plans are hosted on `media.propertyengine.co.uk`. Photo URLs have no file
-extension, so name them `.jpg` as above; floor plans are usually `.png` (keep the extension from
-the URL). Each photo also has a `room` label (EXTERIOR, KITCHEN, BATHROOM, LIVING or UNKNOWN) if you
-want it in the file name. Download them as soon as the webhook arrives.
+| Connection name | Key name | Key value | Placement | Allowed service origin |
+|---|---|---|---|---|
+| Make webhook key | `x-make-apikey` | the ghl-webhook-key value | Header | `https://hook.eu1.make.com` |
+| Claude routine token | `Authorization` | `Bearer <routine token>` | Header | `https://api.anthropic.com` |
 
-## 3. Make scenario A: start the routine
+Then select them in:
 
-1. Trigger: the GHL "opportunity stage changed → UNDER ANALYSIS" webhook.
-2. **HTTP → Make a request**:
-   - Method `POST`, URL = the routine's Fire URL
-     (`https://api.anthropic.com/v1/claude_code/routines/trig_.../fire`)
-   - Headers:
-     - `Authorization: Bearer <routine token>`
-     - `anthropic-beta: experimental-cc-routine-2026-04-01`
-     - `anthropic-version: 2023-06-01`
-     - `Content-Type: application/json`
-   - Body type Raw, JSON:
-     ```json
-     { "text": "opportunity_id={{opp.id}}; propertyengine_url={{opp.propertyengine_link}}; portal_url={{opp.rightmove_link}}; address={{opp.address}}; postcode={{opp.postcode}}" }
-     ```
-   - Parse response: yes. The reply is `{ "type": "routine_fire", "claude_code_session_id": ..., "claude_code_session_url": ... }`,
-     not the property data. That arrives in scenario B a few minutes later.
-3. Optional: store `opportunity_id` + `claude_code_session_url` in a Make data store, and have a
-   scheduled check that alerts Slack when no bundle has arrived after 15 minutes.
+- AUC-102 → module "HTTP to Deal Staker - AUC-104 - Part 1" → **Make webhook key**
+- AUC-104 Part 1 → module "Start Claude routine (PropertyEngine)" → **Claude routine token**
 
-## Limits
+### 2. Make: map the PropertyEngine link
 
-- The `/fire` API is in research preview; the beta header may change (older versions keep working
-  for a while).
-- 30 API fires per hour per routine. Each run uses the Claude Pro plan's allowance.
-- A run can occasionally stop to ask for approval; open `claude_code_session_url` to answer it.
+AUC-102 sends `propertyengine_url = {{1.customData.propertyengine_url}}`. In the GHL workflow's webhook
+action, add a custom data field `propertyengine_url` with the opportunity's PropertyEngine link (or
+rename the mapping in AUC-102 to the field you already send). Without a link the routine falls back to
+an address + postcode search.
+
+### 3. Claude routine (claude.ai/code/routines → New)
+
+- **Prompt**: everything below the line in `routine/PROMPT.md`.
+- **Connectors**: PropertyEngine MCP only.
+- **Environment**: network access Custom, allowed domains `hook.eu1.make.com` (keep the package
+  manager defaults ticked). Environment variables:
+  ```
+  MAKE_WEBHOOK_URL=https://hook.eu1.make.com/4goqouy6g32cvpusniiziwyn3rvvnjj3
+  MAKE_WEBHOOK_API_KEY=<the ghl-webhook-key value>
+  ```
+- **Trigger**: API → copy the Fire URL, Generate token (shown once).
+- Put the Fire URL into AUC-104 Part 1's HTTP module (replace `REPLACE_WITH_ROUTINE_TRIGGER_ID`), and the
+  token into the "Claude routine token" connection.
+
+### 4. Test, in this order
+
+1. Routine → **Run now** with:
+   `opportunity_id=test-1; propertyengine_url=https://propertyengine.co.uk/property/VsBsijE3n; deal_folder_id=<id>; photos_folder_id=<id>; floorplan_folder_id=<id>; comparables_folder_id=<id>`
+   using the IDs of a test deal folder. Part 2 must be switched on (or "Run once") to receive it.
+2. Turn on Part 1 and Part 2, then move a real card to UNDER ANALYSIS.
+
+## Notes
+
+- AUC-102 only calls Part 1 when it creates a new folder; moving a card again just refreshes the GHL link.
+- The routine API is in research preview: 30 fires per hour per routine, and each run uses the Claude
+  plan's allowance. A run can occasionally pause for approval; open its session link to answer.
+- Photo URLs are on `media.propertyengine.co.uk` (small size). Download them as soon as the bundle
+  arrives.
+- Known AUC-102 issues still open: GHL can fire twice at once (turn on sequential processing), and the
+  folder search uses the raw opportunity name while the folder is created with `/` and `\` replaced.
