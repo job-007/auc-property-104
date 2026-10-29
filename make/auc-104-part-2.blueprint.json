@@ -243,22 +243,44 @@
         {
           "flow": [
             {
-              "id": 9,
-              "module": "builtin:BasicFeeder",
-              "version": 1,
-              "parameters": {},
-              "mapper": {
-                "array": "{{1.comparables}}"
+              "id": 15,
+              "module": "http:MakeRequest",
+              "version": 4,
+              "parameters": {
+                "authenticationType": "apiKeyConnection",
+                "apiKeyAccount": 12347507,
+                "tlsType": ""
               },
-              "metadata": {
-                "designer": {
-                  "x": 600,
-                  "y": 100,
-                  "name": "Each comparable"
-                }
+              "mapper": {
+                "url": "https://api.propertydata.co.uk/sold-prices",
+                "method": "get",
+                "queryParameters": [
+                  {
+                    "name": "postcode",
+                    "value": "{{replace(1.details.postcode; \" \"; \"\")}}"
+                  },
+                  {
+                    "name": "radius",
+                    "value": "0.5"
+                  },
+                  {
+                    "name": "max_age",
+                    "value": "12"
+                  },
+                  {
+                    "name": "type",
+                    "value": "{{switch(1.details.property_type; \"TERRACED\"; \"terraced_house\"; \"SEMI_DETACHED\"; \"semi-detached_house\"; \"DETACHED\"; \"detached_house\"; \"FLAT\"; \"flat\"; \"\")}}"
+                  }
+                ],
+                "parseResponse": true,
+                "stopOnHttpError": true,
+                "timeout": 40,
+                "allowRedirects": true,
+                "shareCookies": false,
+                "requestCompressedContent": true
               },
               "filter": {
-                "name": "Has comparables",
+                "name": "Has postcode",
                 "conditions": [
                   [
                     {
@@ -267,9 +289,8 @@
                       "b": "ok"
                     },
                     {
-                      "a": "{{length(1.comparables)}}",
-                      "o": "number:greater",
-                      "b": "0"
+                      "a": "{{1.details.postcode}}",
+                      "o": "exist"
                     }
                   ],
                   [
@@ -279,12 +300,48 @@
                       "b": "partial"
                     },
                     {
-                      "a": "{{length(1.comparables)}}",
-                      "o": "number:greater",
-                      "b": "0"
+                      "a": "{{1.details.postcode}}",
+                      "o": "exist"
                     }
                   ]
                 ]
+              },
+              "metadata": {
+                "designer": {
+                  "x": 600,
+                  "y": 100,
+                  "name": "PropertyData sold prices"
+                }
+              },
+              "onerror": [
+                {
+                  "id": 16,
+                  "module": "builtin:Ignore",
+                  "version": 1,
+                  "metadata": {
+                    "designer": {
+                      "x": 600,
+                      "y": 250,
+                      "name": "Skip comparables"
+                    }
+                  }
+                }
+              ]
+            },
+            {
+              "id": 9,
+              "module": "builtin:BasicFeeder",
+              "version": 1,
+              "parameters": {},
+              "mapper": {
+                "array": "{{15.data.data.raw_data}}"
+              },
+              "metadata": {
+                "designer": {
+                  "x": 900,
+                  "y": 100,
+                  "name": "Each comparable"
+                }
               }
             },
             {
@@ -295,21 +352,33 @@
                 "feeder": 9,
                 "rowSeparator": "\n"
               },
+              "filter": {
+                "name": "Freehold only",
+                "conditions": [
+                  [
+                    {
+                      "a": "{{9.tenure}}",
+                      "o": "text:equal:ci",
+                      "b": "freehold"
+                    }
+                  ]
+                ]
+              },
               "mapper": {
-                "value": "\"{{9.sold_date}}\",\"{{9.address}}\",{{9.sold_price_gbp}},{{9.bedrooms}},\"{{9.property_type}}\",\"{{9.tenure}}\",{{9.floor_area_sqft}},{{9.price_per_sqft_gbp}},{{9.distance_miles}},{{9.condition_score}},\"{{9.propertyengine_url}}\""
+                "value": "\"{{9.date}}\",\"{{9.address}}\",{{9.price}},{{9.bedrooms}},\"{{9.type}}\",\"{{9.tenure}}\",\"{{9.class}}\",{{9.distance}},\"{{9.url}}\""
               },
               "metadata": {
-                "designer": {
-                  "x": 900,
-                  "y": 100,
-                  "name": "CSV rows"
-                },
                 "restore": {
                   "parameters": {
                     "rowSeparator": {
                       "label": "New row"
                     }
                   }
+                },
+                "designer": {
+                  "x": 1200,
+                  "y": 100,
+                  "name": "CSV rows (freehold)"
                 }
               }
             },
@@ -324,12 +393,12 @@
                 "select": "map",
                 "folderId": "{{1.drive_folders.comparables_folder_id}}",
                 "filename": "comparables.csv",
-                "data": "sold_date,address,sold_price_gbp,bedrooms,property_type,tenure,floor_area_sqft,price_per_sqft_gbp,distance_miles,condition_score,propertyengine_url\n{{10.text}}",
+                "data": "date,address,price,bedrooms,type,tenure,class,distance_miles,url\n{{10.text}}",
                 "convert": false
               },
               "metadata": {
                 "designer": {
-                  "x": 1200,
+                  "x": 1500,
                   "y": 100,
                   "name": "Upload comparables.csv"
                 }
@@ -350,7 +419,7 @@
                 "select": "map",
                 "folderId": "{{1.drive_folders.deal_folder_id}}",
                 "filename": "PropertyEngine summary.txt",
-                "data": "PropertyEngine summary\nAddress: {{1.details.address_line}}, {{1.details.town}}, {{1.details.postcode}}\nAsking price: \u00a3{{1.details.asking_price_gbp}} ({{1.details.asking_price_qualifier}})\nType: {{1.details.property_type}} | Tenure: {{1.details.tenure}}\nBedrooms: {{1.details.bedrooms}} | Bathrooms: {{1.details.bathrooms}}\nFloor area: {{1.details.floor_area_sqm}} sqm ({{1.details.floor_area_sqft}} sqft)\nEPC: {{1.details.epc_rating}} (potential {{1.details.epc_potential}}) | Council tax: {{1.details.council_tax_band}}\nCondition score (1-5): {{1.details.condition_score}}\nLast sold: \u00a3{{1.details.last_sold_price_gbp}} on {{1.details.last_sold_date}}\nArea average sold price: \u00a3{{1.details.area_average_sold_price_gbp}}\nListed: {{1.details.listed_date}} | Status: {{1.details.listing_status}}\nAgent: {{1.details.agent_name}} {{1.details.agent_phone}}\nPropertyEngine: {{1.details.listing_url}}\nRightmove: {{1.details.rightmove_url}}\nZoopla: {{1.details.zoopla_url}}\nPhotos: {{length(1.photos)}} | Floor plans: {{length(1.floorplan_urls)}} | Comparables: {{length(1.comparables)}}\nGenerated: {{1.generated_at}} | Claude run: {{1.claude_session_url}}\n\nDescription:\n{{1.details.description}}\n",
+                "data": "PropertyEngine summary\nAddress: {{1.details.address_line}}, {{1.details.town}}, {{1.details.postcode}}\nAsking price: \u00a3{{1.details.asking_price_gbp}} ({{1.details.asking_price_qualifier}})\nType: {{1.details.property_type}} | Tenure: {{1.details.tenure}}\nBedrooms: {{1.details.bedrooms}} | Bathrooms: {{1.details.bathrooms}}\nFloor area: {{1.details.floor_area_sqm}} sqm ({{1.details.floor_area_sqft}} sqft)\nEPC: {{1.details.epc_rating}} (potential {{1.details.epc_potential}}) | Council tax: {{1.details.council_tax_band}}\nCondition score (1-5): {{1.details.condition_score}}\nLast sold: \u00a3{{1.details.last_sold_price_gbp}} on {{1.details.last_sold_date}}\nArea average sold price: \u00a3{{1.details.area_average_sold_price_gbp}}\nListed: {{1.details.listed_date}} | Status: {{1.details.listing_status}}\nAgent: {{1.details.agent_name}} {{1.details.agent_phone}}\nPropertyEngine: {{1.details.listing_url}}\nRightmove: {{1.details.rightmove_url}}\nZoopla: {{1.details.zoopla_url}}\nPhotos: {{length(1.photos)}} | Floor plans: {{length(1.floorplan_urls)}}\nGenerated: {{1.generated_at}} | Claude run: {{1.claude_session_url}}\n\nDescription:\n{{1.details.description}}\n",
                 "convert": false
               },
               "metadata": {

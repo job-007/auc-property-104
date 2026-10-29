@@ -16,14 +16,15 @@ Deal Staker - AUC-102 (8165648)
 Deal Staker - AUC-104 - Part 1 (8255125)
    → HTTP POST to the Claude routine Fire URL (returns at once with a session link)
    ▼
-Claude routine "AUC deal bundle" ── PropertyEngine connector (get_property, get_property_comparables)
+Claude routine "AUC deal bundle" (trig_01RLU5DXVkTJqrNGAAJ5f6Kx) ── PropertyEngine connector (get_property)
    │  POST JSON with x-make-apikey
    ▼  webhook deal-staker-auc-104-part-2
 Deal Staker - AUC-104 - Part 2 (8255121)
    router:
    ├─ each photo URL → Download a file → Drive: Photos/01-exterior.jpg …
    ├─ each floor plan URL → Download a file → Drive: Floorplan/floorplan-1.png
-   ├─ each comparable → CSV rows → Drive: Comparables/comparables.csv
+   ├─ PropertyData sold prices (postcode, 0.5 mi, 12 months, same type) → freehold rows only
+   │    → Drive: Comparables/comparables.csv
    └─ details → Drive: deal folder/PropertyEngine summary.txt
 ```
 
