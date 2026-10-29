@@ -51,12 +51,21 @@ Then select them in:
 - AUC-102 → module "HTTP to Deal Staker - AUC-104 - Part 1" → **Make webhook key**
 - AUC-104 Part 1 → module "Start Claude routine (PropertyEngine)" → **Claude routine token**
 
-### 2. Make: map the PropertyEngine link
+### 2. GHL: send the property links
 
-AUC-102 sends `propertyengine_url = {{1.customData.propertyengine_url}}`. In the GHL workflow's webhook
-action, add a custom data field `propertyengine_url` with the opportunity's PropertyEngine link (or
-rename the mapping in AUC-102 to the field you already send). Without a link the routine falls back to
-an address + postcode search.
+In the GHL workflow's webhook action to AUC-102, the Custom Data must include:
+
+| Key | Value (GHL merge field) |
+|---|---|
+| `opportunity_id` | opportunity ID (already there) |
+| `opportunity_name` | opportunity name (already there) |
+| `postcode` | postcode (already there) |
+| `propertyengine_url` | the opportunity's "Property Engine Link" field |
+| `rightmove_url` | the opportunity's "Rightmove Link" field |
+
+AUC-102 passes these to Part 1, which sends them to the routine (`propertyengine_url`, and
+`rightmove_url` as `portal_url`). Without either link the routine falls back to an address +
+postcode search, which only finds properties currently on the market.
 
 ### 3. Claude routine (claude.ai/code/routines → New)
 
