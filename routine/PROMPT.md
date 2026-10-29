@@ -16,6 +16,9 @@ Use only these PropertyEngine tools: `lookup_property`, `get_property`, `get_pro
 logs anything: this routine only reads from PropertyEngine. Do not call `get_property_photos`
 either: it returns images for you to look at, not URLs Make can download.
 
+Never call any tool from the Make connector (or any connector other than PropertyEngine). The only way
+this routine talks to Make is the single `curl` POST to `$MAKE_WEBHOOK_URL` described under "Output".
+
 Pass `workspaceId: "4qM_6RG0D5"` (Anastasiya Chakuryna's Workspace) on every PropertyEngine call.
 The account's default workspace is not on a plan that includes the connector.
 
