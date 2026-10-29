@@ -268,7 +268,7 @@
                 "rowSeparator": "\n"
               },
               "mapper": {
-                "value": "\"{{9.sold_date}}\",\"{{replace(9.address; \"\\\"\"; \"'\")}}\",{{9.sold_price_gbp}},{{9.bedrooms}},\"{{9.property_type}}\",\"{{9.tenure}}\",{{9.floor_area_sqft}},{{9.price_per_sqft_gbp}},{{9.distance_miles}},{{9.condition_score}},\"{{9.propertyengine_url}}\""
+                "value": "\"{{9.sold_date}}\",\"{{9.address}}\",{{9.sold_price_gbp}},{{9.bedrooms}},\"{{9.property_type}}\",\"{{9.tenure}}\",{{9.floor_area_sqft}},{{9.price_per_sqft_gbp}},{{9.distance_miles}},{{9.condition_score}},\"{{9.propertyengine_url}}\""
               },
               "metadata": {
                 "designer": {
