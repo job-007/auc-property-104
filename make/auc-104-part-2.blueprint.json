@@ -95,7 +95,21 @@
                   "y": -300,
                   "name": "Download photo"
                 }
-              }
+              },
+              "onerror": [
+                {
+                  "id": 13,
+                  "module": "builtin:Ignore",
+                  "version": 1,
+                  "metadata": {
+                    "designer": {
+                      "x": 900,
+                      "y": -150,
+                      "name": "Skip this photo"
+                    }
+                  }
+                }
+              ]
             },
             {
               "id": 5,
@@ -107,7 +121,7 @@
               "mapper": {
                 "select": "map",
                 "folderId": "{{1.drive_folders.photos_folder_id}}",
-                "filename": "{{if(3.index < 10; \"0\" + 3.index; 3.index)}}-{{lower(3.room)}}.jpg",
+                "filename": "{{if(3.index < 10; \"0\"; \"\")}}{{3.index}}-{{lower(3.room)}}.jpg",
                 "data": "{{4.data}}",
                 "convert": false
               },
@@ -186,7 +200,21 @@
                   "y": -100,
                   "name": "Download floor plan"
                 }
-              }
+              },
+              "onerror": [
+                {
+                  "id": 14,
+                  "module": "builtin:Ignore",
+                  "version": 1,
+                  "metadata": {
+                    "designer": {
+                      "x": 900,
+                      "y": 50,
+                      "name": "Skip this floor plan"
+                    }
+                  }
+                }
+              ]
             },
             {
               "id": 8,
@@ -275,6 +303,13 @@
                   "x": 900,
                   "y": 100,
                   "name": "CSV rows"
+                },
+                "restore": {
+                  "parameters": {
+                    "rowSeparator": {
+                      "label": "New row"
+                    }
+                  }
                 }
               }
             },
