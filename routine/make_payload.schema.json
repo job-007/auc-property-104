@@ -1,0 +1,103 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AUC deal bundle sent from the Claude routine to the Make.com webhook",
+  "type": "object",
+  "required": [
+    "status", "opportunity_id", "property_id", "match_confidence", "details",
+    "photos", "floorplan_url", "floorplan_urls", "comparables",
+    "comparables_parameters_used", "errors", "generated_at", "claude_session_url"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "status": { "enum": ["ok", "partial", "not_found", "error"] },
+    "opportunity_id": { "type": ["string", "null"] },
+    "property_id": { "type": ["string", "null"] },
+    "match_confidence": { "type": ["number", "null"], "minimum": 0, "maximum": 1 },
+    "details": {
+      "type": ["object", "null"],
+      "required": [
+        "address_line", "town", "postcode", "property_type", "tenure", "bedrooms",
+        "bathrooms", "receptions", "floor_area_sqft", "floor_area_sqm", "asking_price_gbp",
+        "listing_status", "listed_date", "agent_name", "agent_phone", "epc_rating",
+        "epc_potential", "council_tax_band", "listing_url", "rightmove_url", "description"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "address_line": { "type": ["string", "null"] },
+        "town": { "type": ["string", "null"] },
+        "postcode": { "type": ["string", "null"] },
+        "property_type": { "type": ["string", "null"] },
+        "tenure": { "type": ["string", "null"] },
+        "bedrooms": { "type": ["integer", "null"] },
+        "bathrooms": { "type": ["integer", "null"] },
+        "receptions": { "type": ["integer", "null"] },
+        "floor_area_sqft": { "type": ["integer", "null"] },
+        "floor_area_sqm": { "type": ["integer", "null"] },
+        "asking_price_gbp": { "type": ["integer", "null"] },
+        "listing_status": { "type": ["string", "null"] },
+        "listed_date": { "type": ["string", "null"], "format": "date" },
+        "agent_name": { "type": ["string", "null"] },
+        "agent_phone": { "type": ["string", "null"] },
+        "epc_rating": { "type": ["string", "null"] },
+        "epc_potential": { "type": ["string", "null"] },
+        "council_tax_band": { "type": ["string", "null"] },
+        "listing_url": { "type": ["string", "null"] },
+        "rightmove_url": { "type": ["string", "null"] },
+        "description": { "type": ["string", "null"] }
+      }
+    },
+    "photos": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "object",
+        "required": ["index", "url", "caption"],
+        "additionalProperties": false,
+        "properties": {
+          "index": { "type": "integer", "minimum": 1 },
+          "url": { "type": "string" },
+          "caption": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "floorplan_url": { "type": ["string", "null"] },
+    "floorplan_urls": { "type": ["array", "null"], "items": { "type": "string" } },
+    "comparables": {
+      "type": ["array", "null"],
+      "items": {
+        "type": "object",
+        "required": [
+          "address", "postcode", "sold_price_gbp", "sold_date", "property_type", "tenure",
+          "bedrooms", "floor_area_sqft", "price_per_sqft_gbp", "distance_miles", "source"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "address": { "type": ["string", "null"] },
+          "postcode": { "type": ["string", "null"] },
+          "sold_price_gbp": { "type": ["integer", "null"] },
+          "sold_date": { "type": ["string", "null"], "format": "date" },
+          "property_type": { "type": ["string", "null"] },
+          "tenure": { "type": ["string", "null"] },
+          "bedrooms": { "type": ["integer", "null"] },
+          "floor_area_sqft": { "type": ["integer", "null"] },
+          "price_per_sqft_gbp": { "type": ["number", "null"] },
+          "distance_miles": { "type": ["number", "null"] },
+          "source": { "type": ["string", "null"] }
+        }
+      }
+    },
+    "comparables_parameters_used": { "type": ["object", "null"] },
+    "errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["section", "message"],
+        "properties": {
+          "section": { "type": "string" },
+          "message": { "type": "string" }
+        }
+      }
+    },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "claude_session_url": { "type": ["string", "null"] }
+  }
+}
