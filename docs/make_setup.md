@@ -25,7 +25,7 @@ Make scenario B ◀── POST JSON ── (photo URLs, details, comparables)
    and sign in with the team email and the 6-digit code.
 2. Create the routine at https://claude.ai/code/routines:
    - **Prompt**: the text from `routine/PROMPT.md`.
-   - **Repository**: this repository (the prompt reads the schema from it).
+   - **Repository**: none needed (the prompt is self-contained).
    - **Connectors**: PropertyEngine only. Remove the rest.
    - **Environment**: one whose network access allows your Make webhook host
      (for example `hook.eu1.make.com`; check the region in your webhook URL).

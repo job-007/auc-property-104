@@ -1,7 +1,7 @@
 # Routine prompt: PropertyEngine deal bundle
 
 Paste everything below the line into the routine's **Prompt** field at claude.ai/code/routines.
-Tool names, arguments and output fields were confirmed against a live property on 29 Oct 2026
+The prompt is self-contained (the routine needs no repository files). Tool names, arguments and output fields were confirmed against a live property on 29 Oct 2026
 (see `docs/propertyengine_discovery.md`).
 
 ---
@@ -95,25 +95,91 @@ Set `comparables_parameters_used` to the `search` object the tool returns.
 
 ## Output
 
-Build one JSON object that matches `routine/make_payload.schema.json` in this repository exactly:
+Build one JSON object with exactly the keys of this template (no extra keys, none missing).
+`photos` and `comparables` hold one object per item with the keys shown; a section that failed
+is `null` instead of a list:
 
-- Every field in the schema is present. Anything PropertyEngine does not provide is `null`.
-  Never guess or invent a value, and never fill a field from your own knowledge.
+```json
+{
+  "status": "ok",
+  "opportunity_id": null,
+  "property_id": null,
+  "match_confidence": null,
+  "details": {
+    "address_line": null,
+    "town": null,
+    "postcode": null,
+    "property_type": null,
+    "tenure": null,
+    "bedrooms": null,
+    "bathrooms": null,
+    "receptions": null,
+    "floor_area_sqft": null,
+    "floor_area_sqm": null,
+    "asking_price_gbp": null,
+    "listing_status": null,
+    "listed_date": null,
+    "agent_name": null,
+    "agent_phone": null,
+    "epc_rating": null,
+    "epc_potential": null,
+    "council_tax_band": null,
+    "listing_url": null,
+    "rightmove_url": null,
+    "description": null,
+    "asking_price_qualifier": null,
+    "condition_score": null,
+    "last_sold_price_gbp": null,
+    "last_sold_date": null,
+    "area_average_sold_price_gbp": null,
+    "zoopla_url": null
+  },
+  "photos": [
+    {
+      "index": null,
+      "url": null,
+      "room": null
+    }
+  ],
+  "floorplan_url": null,
+  "floorplan_urls": [],
+  "comparables": [
+    {
+      "address": null,
+      "postcode": null,
+      "sold_price_gbp": null,
+      "sold_date": null,
+      "property_type": null,
+      "tenure": null,
+      "bedrooms": null,
+      "floor_area_sqft": null,
+      "price_per_sqft_gbp": null,
+      "distance_miles": null,
+      "source": null,
+      "condition_score": null,
+      "propertyengine_url": null
+    }
+  ],
+  "comparables_parameters_used": null,
+  "errors": [],
+  "generated_at": null,
+  "claude_session_url": null
+}
+```
+
+- Anything PropertyEngine does not provide is `null`. Never guess or invent a value, and never
+  fill a field from your own knowledge.
 - Prices are whole numbers in GBP. Dates are `YYYY-MM-DD`. `generated_at` is the current UTC time
   in ISO 8601.
-- `status` is `"ok"`, `"partial"` (comparables failed) or `"not_found"` / `"error"`.
+- `status` is `"ok"`, `"partial"` (comparables failed) or `"not_found"` / `"error"`. For
+  `"not_found"` / `"error"`, `details`, `photos`, `floorplan_urls` and `comparables` are `null`
+  and `errors[]` says why.
 - `claude_session_url` is the output of
   `echo "https://claude.ai/code/session_${CLAUDE_CODE_REMOTE_SESSION_ID#cse_}"`, or `null` if
   that variable is empty.
 
-Write the object to `/tmp/bundle.json` with a short Python script (not by hand), check it against
-the schema:
-
-```bash
-python3 -c "import json,jsonschema; jsonschema.validate(json.load(open('/tmp/bundle.json')), json.load(open('routine/make_payload.schema.json')))"
-```
-
-(install `jsonschema` with `pip install jsonschema` if needed), fix any error, then send it:
+Write the object to `/tmp/bundle.json` with a short Python script (not by hand) and have the same
+script check that its keys match the template above, then send it:
 
 ```bash
 curl -sS -o /tmp/make_response.txt -w '%{http_code}' -X POST "$MAKE_WEBHOOK_URL" \
