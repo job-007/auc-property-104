@@ -60,8 +60,8 @@ In the GHL workflow's webhook action to AUC-102, the Custom Data must include:
 | `opportunity_id` | opportunity ID (already there) |
 | `opportunity_name` | opportunity name (already there) |
 | `postcode` | postcode (already there) |
-| `propertyengine_url` | the opportunity's "Property Engine Link" field |
-| `rightmove_url` | the opportunity's "Rightmove Link" field |
+| `propertyengine_link` | the opportunity's "Property Engine Link" field (already there) |
+| `rightmove_link` | the opportunity's "Rightmove Link" field (already there) |
 
 AUC-102 passes these to Part 1, which sends them to the routine (`propertyengine_url`, and
 `rightmove_url` as `portal_url`). Without either link the routine falls back to an address +
