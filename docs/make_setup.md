@@ -97,3 +97,17 @@ postcode search, which only finds properties currently on the market.
   arrives.
 - Known AUC-102 issues still open: GHL can fire twice at once (turn on sequential processing), and the
   folder search uses the raw opportunity name while the folder is created with `/` and `\` replaced.
+
+## AUC-109: Deal Stacker (runs in parallel with AUC-104)
+
+`Deal Staker - AUC-109` (8260214), webhook `deal-staker-auc-109` (4003439,
+`https://hook.eu1.make.com/a8gljbgqqonwodwucp4rwm3yu398l6ey`, `x-make-apikey`). Called by AUC-102
+right after the AUC-104 call, only when a new deal folder is created.
+
+1. Google Drive (Anastasiya's connection) copies the Master
+   (`1Pdow8Q2bjEtN4lNbq-KzBAyDnjoZOn8u9niE_T9Q0aY`) into the deal folder as
+   `Stacker - <opportunity name>`.
+2. Google Sheets (Julian's connection) writes, on tab `" Numbers Overview All Options "` (the tab
+   name has a leading and trailing space): C10 = `guide_price`, C44 = `new_market_value`,
+   F69 = `beds_potential`, F72 = `lha_weekly`. Each cell is skipped when GHL sends no value.
+3. Scenario 3 (copy "Sample Schedules") is still to add.
