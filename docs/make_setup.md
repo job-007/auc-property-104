@@ -68,7 +68,7 @@ expire.
      - `Content-Type: application/json`
    - Body type Raw, JSON:
      ```json
-     { "text": "opportunity_id={{opp.id}}; propertyengine_url={{opp.pe_link}}; address={{opp.address}}; postcode={{opp.postcode}}" }
+     { "text": "opportunity_id={{opp.id}}; portal_url={{opp.rightmove_link}}; address={{opp.address}}; postcode={{opp.postcode}}" }
      ```
    - Parse response: yes. The reply is `{ "type": "routine_fire", "claude_code_session_id": ..., "claude_code_session_url": ... }`,
      not the property data. That arrives in scenario B a few minutes later.
