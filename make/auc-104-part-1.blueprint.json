@@ -1,0 +1,107 @@
+{
+  "name": "Deal Staker - AUC-104 - Part 1",
+  "flow": [
+    {
+      "id": 1,
+      "module": "gateway:CustomWebHook",
+      "version": 1,
+      "parameters": {
+        "hook": 4001785,
+        "maxResults": 1
+      },
+      "mapper": {},
+      "metadata": {
+        "designer": {
+          "x": 0,
+          "y": 0,
+          "name": "Deal folder ready (from AUC-102)"
+        }
+      }
+    },
+    {
+      "id": 2,
+      "module": "http:MakeRequest",
+      "version": 4,
+      "parameters": {
+        "authenticationType": "apiKeyConnection",
+        "apiKeyAccount": 12500280,
+        "tlsType": ""
+      },
+      "mapper": {
+        "url": "https://api.anthropic.com/v1/claude_code/routines/trig_01RLU5DXVkTJqrNGAAJ5f6Kx/fire",
+        "method": "post",
+        "headers": [
+          {
+            "name": "anthropic-beta",
+            "value": "experimental-cc-routine-2026-04-01"
+          },
+          {
+            "name": "anthropic-version",
+            "value": "2023-06-01"
+          }
+        ],
+        "contentType": "json",
+        "inputMethod": "jsonString",
+        "jsonStringBodyContent": "{\"text\": \"opportunity_id={{1.opportunity_id}}; propertyengine_url={{1.propertyengine_url}}; portal_url={{1.rightmove_url}}; address={{replace(1.opportunity_name; \";\"; \",\")}}; postcode={{1.postcode}}; deal_folder_id={{1.deal_folder_id}}; photos_folder_id={{1.photos_folder_id}}; floorplan_folder_id={{1.floorplan_folder_id}}; comparables_folder_id={{1.comparables_folder_id}}\"}",
+        "parseResponse": true,
+        "stopOnHttpError": true,
+        "timeout": 40,
+        "allowRedirects": true,
+        "shareCookies": false,
+        "requestCompressedContent": true
+      },
+      "metadata": {
+        "restore": {
+          "parameters": {
+            "apiKeyAccount": {
+              "data": {
+                "scoped": "true",
+                "connection": "http-v4-apikey"
+              },
+              "label": "Claude routine token"
+            }
+          }
+        },
+        "designer": {
+          "x": 300,
+          "y": 0,
+          "name": "Start Claude routine (PropertyEngine)"
+        }
+      },
+      "onerror": [
+        {
+          "id": 3,
+          "module": "builtin:Break",
+          "version": 1,
+          "mapper": {
+            "retry": true,
+            "count": "3",
+            "interval": "5"
+          },
+          "metadata": {
+            "designer": {
+              "x": 300,
+              "y": 150,
+              "name": "Retry later (3x, 5 min)"
+            }
+          }
+        }
+      ]
+    }
+  ],
+  "metadata": {
+    "instant": true,
+    "version": 1,
+    "scenario": {
+      "roundtrips": 1,
+      "maxErrors": 3,
+      "autoCommit": true,
+      "autoCommitTriggerLast": true,
+      "sequential": false,
+      "confidential": false,
+      "dataloss": false,
+      "dlq": true,
+      "freshVariables": false
+    }
+  }
+}

@@ -131,7 +131,26 @@
                   "y": -300,
                   "name": "Upload to Photos"
                 }
-              }
+              },
+              "onerror": [
+                {
+                  "id": 17,
+                  "module": "builtin:Break",
+                  "version": 1,
+                  "mapper": {
+                    "retry": true,
+                    "count": "3",
+                    "interval": "5"
+                  },
+                  "metadata": {
+                    "designer": {
+                      "x": 1200,
+                      "y": -150,
+                      "name": "Retry later (3x, 5 min)"
+                    }
+                  }
+                }
+              ]
             }
           ]
         },
@@ -236,7 +255,26 @@
                   "y": -100,
                   "name": "Upload to Floorplan"
                 }
-              }
+              },
+              "onerror": [
+                {
+                  "id": 18,
+                  "module": "builtin:Break",
+                  "version": 1,
+                  "mapper": {
+                    "retry": true,
+                    "count": "3",
+                    "interval": "5"
+                  },
+                  "metadata": {
+                    "designer": {
+                      "x": 1200,
+                      "y": 50,
+                      "name": "Retry later (3x, 5 min)"
+                    }
+                  }
+                }
+              ]
             }
           ]
         },
@@ -402,7 +440,26 @@
                   "y": 100,
                   "name": "Upload comparables.csv"
                 }
-              }
+              },
+              "onerror": [
+                {
+                  "id": 19,
+                  "module": "builtin:Break",
+                  "version": 1,
+                  "mapper": {
+                    "retry": true,
+                    "count": "3",
+                    "interval": "5"
+                  },
+                  "metadata": {
+                    "designer": {
+                      "x": 1500,
+                      "y": 250,
+                      "name": "Retry later (3x, 5 min)"
+                    }
+                  }
+                }
+              ]
             }
           ]
         },
@@ -455,7 +512,26 @@
                     }
                   ]
                 ]
-              }
+              },
+              "onerror": [
+                {
+                  "id": 20,
+                  "module": "builtin:Break",
+                  "version": 1,
+                  "mapper": {
+                    "retry": true,
+                    "count": "3",
+                    "interval": "5"
+                  },
+                  "metadata": {
+                    "designer": {
+                      "x": 600,
+                      "y": 450,
+                      "name": "Retry later (3x, 5 min)"
+                    }
+                  }
+                }
+              ]
             }
           ]
         }
@@ -473,7 +549,7 @@
       "sequential": false,
       "confidential": false,
       "dataloss": false,
-      "dlq": false,
+      "dlq": true,
       "freshVariables": false
     }
   }
