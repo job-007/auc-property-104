@@ -132,9 +132,10 @@ Deal Staker - AUC-110 - Part 2 (8277682) → Drive: deal folder/EPC - <opportuni
 | Deal Staker - AUC-110 - Part 1 | 8277679 | deal-staker-auc-110-part-1 (4008987) | `https://hook.eu1.make.com/2kjesi8ika276qpnf18ddanvj35htb62` |
 | Deal Staker - AUC-110 - Part 2 | 8277682 | deal-staker-auc-110-part-2 (4008988) | `https://hook.eu1.make.com/ni6vmr73jq4pco40wuhti1af4d3kabzd` |
 
-- Matching: the certificate's address (commas removed) must appear as whole words in the opportunity
-  name, so "13 Chester Court" matches "TEST 13 Chester Court, Haverhill" but "3 Chester Court" does
-  not. No match, no postcode or no certificate means no PDF.
+- Matching: the certificate's address (commas removed) must appear as whole words in the GHL address
+  (`full_address`, else `address1`, from Custom Data or the contact fields) or, as a fallback, the
+  opportunity name. So "13 Chester Court" matches "13 Chester Court, Haverhill, CB9 8LT" but
+  "3 Chester Court" does not. No match, no postcode or no certificate means no PDF (not an error).
 - A certificate registered more than 10 years ago is still saved, with " (expired)" in the file name.
 - Setup: create the routine (no connectors, environment "AUC routine" with
   `find-energy-certificate.service.gov.uk` added to the allowed domains and
