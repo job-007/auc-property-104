@@ -112,3 +112,32 @@ right after the AUC-104 call, only when a new deal folder is created.
    F69 = `beds_potential`, F72 = `lha_weekly`. Each cell is skipped when GHL sends no value.
 3. In parallel with steps 1–2, Google Drive copies "Sample Schedules"
    (`1gUafgwbDwn174LwVqeP-JqrXLfbvS4ICt9uNmgAlmpQ`) into the deal folder as `SoW - <opportunity name>`.
+
+## AUC-110: EPC report PDF (runs in parallel with AUC-104 and AUC-109)
+
+```
+AUC-102 (new folder only) → webhook deal-staker-auc-110-part-1
+Deal Staker - AUC-110 - Part 1 (8277679)
+   EPC API search by postcode (connection "EPC API (new)")
+   → keep certificates whose address appears in the opportunity name → newest first
+   → HTTP POST to the "AUC EPC PDF" routine Fire URL (certificate print link, file name, folder ID)
+Claude routine "AUC EPC PDF" (routine/epc_pdf/PROMPT.md) → headless Chromium → PDF
+   │  POST JSON (pdf_base64) with x-make-apikey
+   ▼  webhook deal-staker-auc-110-part-2
+Deal Staker - AUC-110 - Part 2 (8277682) → Drive: deal folder/EPC - <opportunity name>.pdf
+```
+
+| Scenario | ID | Webhook | Webhook URL |
+|---|---|---|---|
+| Deal Staker - AUC-110 - Part 1 | 8277679 | deal-staker-auc-110-part-1 (4008987) | `https://hook.eu1.make.com/2kjesi8ika276qpnf18ddanvj35htb62` |
+| Deal Staker - AUC-110 - Part 2 | 8277682 | deal-staker-auc-110-part-2 (4008988) | `https://hook.eu1.make.com/ni6vmr73jq4pco40wuhti1af4d3kabzd` |
+
+- Matching: the certificate's address (commas removed) must appear as whole words in the opportunity
+  name, so "13 Chester Court" matches "TEST 13 Chester Court, Haverhill" but "3 Chester Court" does
+  not. No match, no postcode or no certificate means no PDF.
+- A certificate registered more than 10 years ago is still saved, with " (expired)" in the file name.
+- Setup: create the routine (no connectors, environment "AUC routine" with
+  `find-energy-certificate.service.gov.uk` added to the allowed domains and
+  `MAKE_EPC_WEBHOOK_URL=https://hook.eu1.make.com/ni6vmr73jq4pco40wuhti1af4d3kabzd` added), then put
+  its Fire URL and a new "Claude EPC routine token" connection into Part 1's last module, and turn
+  Part 1 on.
