@@ -121,7 +121,7 @@ Deal Staker - AUC-110 - Part 1 (8277679)
    EPC API search by postcode (connection "EPC API (new)")
    → keep certificates whose address appears in the opportunity name → newest first
    → HTTP POST to the "AUC EPC PDF" routine Fire URL (certificate print link, file name, folder ID)
-Claude routine "AUC EPC PDF" (routine/epc_pdf/PROMPT.md) → headless Chromium → PDF
+Claude routine "AUC EPC PDF" (trig_01JMcrrgYCCvummVnfmYcfdf, routine/epc_pdf/PROMPT.md) → headless Chromium → PDF
    │  POST JSON (pdf_base64) with x-make-apikey
    ▼  webhook deal-staker-auc-110-part-2
 Deal Staker - AUC-110 - Part 2 (8277682) → Drive: deal folder/EPC - <opportunity name>.pdf
