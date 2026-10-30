@@ -133,7 +133,8 @@ Deal Staker - AUC-110 - Part 2 (8277682) → Drive: deal folder/EPC - <opportuni
 | Deal Staker - AUC-110 - Part 2 | 8277682 | deal-staker-auc-110-part-2 (4008988) | `https://hook.eu1.make.com/ni6vmr73jq4pco40wuhti1af4d3kabzd` |
 
 - Matching: the certificate's address (commas removed) must appear as whole words in the GHL address
-  (`full_address`, else `address1`, from Custom Data or the contact fields) or, as a fallback, the
+  (`full_address` in the webhook's Custom Data = Opportunity → Custom Fields → **Property Address**;
+  not Account/Contact Full Address, which are AUC's office and the vendor's address) or, as a fallback, the
   opportunity name. So "13 Chester Court" matches "13 Chester Court, Haverhill, CB9 8LT" but
   "3 Chester Court" does not. No match, no postcode or no certificate means no PDF (not an error).
 - A certificate registered more than 10 years ago is still saved, with " (expired)" in the file name.
@@ -142,3 +143,6 @@ Deal Staker - AUC-110 - Part 2 (8277682) → Drive: deal folder/EPC - <opportuni
   `MAKE_EPC_WEBHOOK_URL=https://hook.eu1.make.com/ni6vmr73jq4pco40wuhti1af4d3kabzd` added), then put
   its Fire URL and a new "Claude EPC routine token" connection into Part 1's last module, and turn
   Part 1 on.
+
+- First end-to-end run: 30 Oct 2026 17:12, TEST AUC CONTACT (13 Chester Court, CB9 8LT): matched in
+  under 1 s, routine rendered a 47.7 KB PDF in ~15 s, uploaded at 17:12:29.
